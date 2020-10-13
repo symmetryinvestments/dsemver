@@ -13,8 +13,10 @@ import std.exception : enforce;
 
 struct Parameter {
 	string name;
+	Nullable!(string) type;
 	Nullable!(string) deco;
 	Nullable!(string) kind;
+	Nullable!(string[]) storageClass;
 }
 
 struct Member {
@@ -22,6 +24,7 @@ struct Member {
 	string kind;
 	Nullable!(string) originalType;
 	Nullable!(string) type;
+	Nullable!(string) value;
 	Nullable!(string[]) storageClass;
 	Nullable!(string) deco;
 	Nullable!(string) baseDeco;
@@ -78,7 +81,11 @@ T parseJson(T)(JSONValue jv) {
 		T ret;
 
 		string[] jsNames = jv.objectNoRef().keys().sort.array;
-		string[] sNames = [FieldNameTuple!T].sort.array;
+		string[] sNames = ([FieldNameTuple!T] ~ ["endchar", "endline", "char", "line"]).sort.array;
+		auto sd = setDifference(jsNames, sNames);
+		if(!sd.empty) {
+			writefln("%s", sd);
+		}
 
 		static foreach(mem; FieldNameTuple!T) {{
 			alias MT = typeof(__traits(getMember, T, mem));
@@ -102,6 +109,7 @@ unittest {
 	import std.file;
 
 	foreach(f; dirEntries("testfiles/", "*.json", SpanMode.depth)) {
+		writeln(f.name);
 		try {
 			auto a = parse(f.name);
 		} catch(Exception e) {
