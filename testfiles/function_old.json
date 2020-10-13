@@ -1,0 +1,23 @@
+[
+ {
+  "kind" : "module",
+  "file" : "function_old.d",
+  "members" : [
+   {
+    "name" : "fun",
+    "kind" : "function",
+    "line" : 1,
+    "char" : 5,
+    "deco" : "FfZi",
+    "parameters" : [
+     {
+      "name" : "d",
+      "deco" : "f"
+     }
+    ],
+    "endline" : 3,
+    "endchar" : 1
+   }
+  ]
+ }
+]

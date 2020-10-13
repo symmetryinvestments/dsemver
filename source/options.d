@@ -14,6 +14,9 @@ struct Options {
 
 	@Arg('n')
 	string neu;
+
+	@Arg('t')
+	string testParse;
 }
 
 ref const(Options) getOptions() {

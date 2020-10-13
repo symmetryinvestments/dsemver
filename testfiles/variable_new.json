@@ -1,0 +1,15 @@
+[
+ {
+  "kind" : "module",
+  "file" : "variable_new.d",
+  "members" : [
+   {
+    "name" : "b",
+    "kind" : "variable",
+    "line" : 1,
+    "char" : 5,
+    "deco" : "i"
+   }
+  ]
+ }
+]

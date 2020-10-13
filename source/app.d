@@ -15,6 +15,10 @@ void main(string[] args) {
 		buildInterface();
 	}
 
+	if(!getOptions().testParse.empty) {
+		auto tp = parse(getOptions().testParse);
+	}
+
 	auto old = parse(getOptions().old);
 	auto neu = parse(getOptions().neu);
 

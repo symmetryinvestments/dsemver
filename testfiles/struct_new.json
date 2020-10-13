@@ -1,0 +1,24 @@
+[
+ {
+  "kind" : "module",
+  "file" : "struct_new.d",
+  "members" : [
+   {
+    "name" : "Foo",
+    "kind" : "struct",
+    "line" : 1,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "bar2",
+      "kind" : "variable",
+      "line" : 2,
+      "char" : 6,
+      "deco" : "i",
+      "offset" : 0
+     }
+    ]
+   }
+  ]
+ }
+]

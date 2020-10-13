@@ -1,0 +1,38 @@
+[
+ {
+  "kind" : "module",
+  "file" : "function2_new.d",
+  "members" : [
+   {
+    "name" : "fun",
+    "kind" : "function",
+    "line" : 1,
+    "char" : 5,
+    "deco" : "FiZi",
+    "parameters" : [
+     {
+      "name" : "a",
+      "deco" : "i"
+     }
+    ],
+    "endline" : 3,
+    "endchar" : 1
+   },
+   {
+    "name" : "fun",
+    "kind" : "function",
+    "line" : 5,
+    "char" : 5,
+    "deco" : "FAyaZi",
+    "parameters" : [
+     {
+      "name" : "s",
+      "deco" : "Aya"
+     }
+    ],
+    "endline" : 7,
+    "endchar" : 1
+   }
+  ]
+ }
+]

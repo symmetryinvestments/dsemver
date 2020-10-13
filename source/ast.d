@@ -1,9 +1,12 @@
 module ast;
 
+import std.stdio;
+import std.array : array;
 import std.json;
 import std.typecons : Nullable, nullable;
 import std.traits : isArray, isSomeString, isIntegral, isFloatingPoint,
 	   FieldNameTuple, isBasicType;
+import std.algorithm : sort, setDifference;
 import std.range : ElementEncodingType;
 import std.format;
 import std.exception : enforce;
@@ -21,26 +24,21 @@ struct Member {
 	Nullable!(string) type;
 	Nullable!(string[]) storageClass;
 	Nullable!(string) deco;
-	Nullable!(size_t) align_;
-	Nullable!(size_t) offset;
+	Nullable!(string) baseDeco;
+	Nullable!(long) align_;
+	Nullable!(long) offset;
 	Nullable!(Parameter[]) parameters;
 	Nullable!(string[]) overrides;
-}
-
-struct Symbol {
-	string name;
-	string kind;
 	Nullable!(string) protection;
 	Nullable!(string[]) selective;
-	Nullable!(string) deco;
-	Nullable!(Parameter[]) parameters;
+	Nullable!(Member[]) members;
 }
 
 struct Module {
 	Nullable!string name;
 	string kind;
 	string file;
-	Symbol[] members;
+	Member[] members;
 }
 
 struct Ast {
@@ -78,12 +76,16 @@ T parseJson(T)(JSONValue jv) {
 		enforce(jv.type == JSONType.object, format("Expected object '%s' not '%s'\n%s",
 					T.stringof, jv.type, jv.toPrettyString()));
 		T ret;
+
+		string[] jsNames = jv.objectNoRef().keys().sort.array;
+		string[] sNames = [FieldNameTuple!T].sort.array;
+
 		static foreach(mem; FieldNameTuple!T) {{
 			alias MT = typeof(__traits(getMember, T, mem));
 
 			auto p = mem in jv;
 			static if(is(MT : Nullable!F, F)) {
-				if(p) {
+				if(p !is null) {
 					__traits(getMember, ret, mem) = parseJson!(F)(*p);
 				}
 			} else {
@@ -93,5 +95,17 @@ T parseJson(T)(JSONValue jv) {
 			}
 		}}
 		return ret;
+	}
+}
+
+unittest {
+	import std.file;
+
+	foreach(f; dirEntries("testfiles/", "*.json", SpanMode.depth)) {
+		try {
+			auto a = parse(f.name);
+		} catch(Exception e) {
+			assert(false, format("%s\n%s", f.name, e));
+		}
 	}
 }

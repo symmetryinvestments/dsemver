@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/dsemver
+dsemver.so
+dsemver.dylib
+dsemver.dll
+dsemver.a
+dsemver.lib
+dsemver-test-*
+*.exe
+*.o
+*.obj
+*.lst

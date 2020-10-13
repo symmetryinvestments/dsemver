@@ -1,0 +1,40 @@
+[
+ {
+  "kind" : "module",
+  "file" : "struct2_old.d",
+  "members" : [
+   {
+    "name" : "Foo",
+    "kind" : "struct",
+    "line" : 1,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "Bar",
+      "kind" : "struct",
+      "line" : 2,
+      "char" : 2,
+      "members" : [
+       {
+        "name" : "a",
+        "kind" : "variable",
+        "line" : 3,
+        "char" : 7,
+        "deco" : "i",
+        "offset" : 0
+       }
+      ]
+     },
+     {
+      "name" : "a",
+      "kind" : "variable",
+      "line" : 5,
+      "char" : 6,
+      "deco" : "i",
+      "offset" : 0
+     }
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,18 @@
+[
+ {
+  "kind" : "module",
+  "file" : "function3_new.d",
+  "members" : [
+   {
+    "name" : "bar",
+    "kind" : "function",
+    "protection" : "private",
+    "line" : 1,
+    "char" : 13,
+    "deco" : "FZi",
+    "endline" : 3,
+    "endchar" : 1
+   }
+  ]
+ }
+]

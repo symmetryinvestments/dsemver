@@ -1,0 +1,37 @@
+[
+ {
+  "kind" : "module",
+  "file" : "template2_new.d",
+  "members" : [
+   {
+    "kind" : "template",
+    "line" : 1,
+    "char" : 3,
+    "name" : "fun",
+    "parameters" : [
+     {
+      "name" : "T",
+      "kind" : "type"
+     }
+    ],
+    "members" : [
+     {
+      "name" : "fun",
+      "kind" : "function",
+      "line" : 1,
+      "char" : 3,
+      "type" : "T(T t)",
+      "parameters" : [
+       {
+        "name" : "t",
+        "type" : "T"
+       }
+      ],
+      "endline" : 3,
+      "endchar" : 1
+     }
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,37 @@
+[
+ {
+  "kind" : "module",
+  "file" : "template4_old.d",
+  "members" : [
+   {
+    "kind" : "template",
+    "line" : 1,
+    "char" : 1,
+    "name" : "Foo",
+    "parameters" : [
+     {
+      "name" : "T",
+      "kind" : "type"
+     }
+    ],
+    "members" : [
+     {
+      "name" : "Bar",
+      "kind" : "struct",
+      "line" : 2,
+      "char" : 2,
+      "members" : [
+       {
+        "name" : "t",
+        "kind" : "variable",
+        "line" : 3,
+        "char" : 5,
+        "type" : "T"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+]
