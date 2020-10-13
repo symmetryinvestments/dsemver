@@ -1,0 +1,672 @@
+[
+ {
+  "kind" : "module",
+  "file" : "source/app.d",
+  "members" : [
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 1,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.array",
+    "kind" : "import",
+    "line" : 2,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "empty"
+    ]
+   },
+   {
+    "name" : "aggregateprinter",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "ast",
+    "kind" : "import",
+    "line" : 6,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "buildinterface",
+    "kind" : "import",
+    "line" : 7,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "compare",
+    "kind" : "import",
+    "line" : 8,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "options",
+    "kind" : "import",
+    "line" : 9,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "main",
+    "kind" : "function",
+    "line" : 11,
+    "char" : 6,
+    "deco" : "FAAyaZv",
+    "parameters" : [
+     {
+      "name" : "args",
+      "deco" : "AAya"
+     }
+    ],
+    "endline" : 23,
+    "endchar" : 1
+   },
+   {
+    "name" : "_d_cmain!()",
+    "kind" : "mixin",
+    "line" : 11,
+    "char" : 6
+   }
+  ]
+ },
+ {
+  "name" : "ast",
+  "kind" : "module",
+  "file" : "source/ast.d",
+  "members" : [
+   {
+    "name" : "std.json",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.typecons",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "Nullable",
+     "nullable"
+    ]
+   },
+   {
+    "name" : "std.traits",
+    "kind" : "import",
+    "line" : 5,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "isArray",
+     "isSomeString",
+     "isIntegral",
+     "isFloatingPoint",
+     "FieldNameTuple",
+     "isBasicType"
+    ]
+   },
+   {
+    "name" : "std.range",
+    "kind" : "import",
+    "line" : 7,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "ElementEncodingType"
+    ]
+   },
+   {
+    "name" : "std.format",
+    "kind" : "import",
+    "line" : 8,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.exception",
+    "kind" : "import",
+    "line" : 9,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "enforce"
+    ]
+   },
+   {
+    "name" : "Parameter",
+    "kind" : "struct",
+    "line" : 11,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "name",
+      "kind" : "variable",
+      "line" : 12,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 0
+     },
+     {
+      "name" : "deco",
+      "kind" : "variable",
+      "line" : 13,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 16
+     },
+     {
+      "name" : "kind",
+      "kind" : "variable",
+      "line" : 14,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 40
+     }
+    ]
+   },
+   {
+    "name" : "Member",
+    "kind" : "struct",
+    "line" : 17,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "name",
+      "kind" : "variable",
+      "line" : 18,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 0
+     },
+     {
+      "name" : "kind",
+      "kind" : "variable",
+      "line" : 19,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 16
+     },
+     {
+      "name" : "originalType",
+      "kind" : "variable",
+      "line" : 20,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 32
+     },
+     {
+      "name" : "type",
+      "kind" : "variable",
+      "line" : 21,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 56
+     },
+     {
+      "name" : "storageClass",
+      "kind" : "variable",
+      "line" : 22,
+      "char" : 22,
+      "deco" : "S3std8typecons__T8NullableTAAyaZQp",
+      "offset" : 80
+     },
+     {
+      "name" : "deco",
+      "kind" : "variable",
+      "line" : 23,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 104
+     },
+     {
+      "name" : "align_",
+      "kind" : "variable",
+      "line" : 24,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTmZQm",
+      "originalType" : "Nullable!size_t",
+      "offset" : 128
+     },
+     {
+      "name" : "offset",
+      "kind" : "variable",
+      "line" : 25,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTmZQm",
+      "originalType" : "Nullable!size_t",
+      "offset" : 144
+     },
+     {
+      "name" : "parameters",
+      "kind" : "variable",
+      "line" : 26,
+      "char" : 25,
+      "deco" : "S3std8typecons__T8NullableTAS3ast9ParameterZQBb",
+      "offset" : 160
+     },
+     {
+      "name" : "overrides",
+      "kind" : "variable",
+      "line" : 27,
+      "char" : 22,
+      "deco" : "S3std8typecons__T8NullableTAAyaZQp",
+      "offset" : 184
+     }
+    ]
+   },
+   {
+    "name" : "Symbol",
+    "kind" : "struct",
+    "line" : 30,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "name",
+      "kind" : "variable",
+      "line" : 31,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 0
+     },
+     {
+      "name" : "kind",
+      "kind" : "variable",
+      "line" : 32,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 16
+     },
+     {
+      "name" : "protection",
+      "kind" : "variable",
+      "line" : 33,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 32
+     },
+     {
+      "name" : "selective",
+      "kind" : "variable",
+      "line" : 34,
+      "char" : 22,
+      "deco" : "S3std8typecons__T8NullableTAAyaZQp",
+      "offset" : 56
+     },
+     {
+      "name" : "deco",
+      "kind" : "variable",
+      "line" : 35,
+      "char" : 20,
+      "deco" : "S3std8typecons__T8NullableTAyaZQo",
+      "offset" : 80
+     },
+     {
+      "name" : "parameters",
+      "kind" : "variable",
+      "line" : 36,
+      "char" : 25,
+      "deco" : "S3std8typecons__T8NullableTAS3ast9ParameterZQBb",
+      "offset" : 104
+     }
+    ]
+   },
+   {
+    "name" : "Module",
+    "kind" : "struct",
+    "line" : 39,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "name",
+      "kind" : "variable",
+      "line" : 40,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 0
+     },
+     {
+      "name" : "kind",
+      "kind" : "variable",
+      "line" : 41,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 16
+     },
+     {
+      "name" : "file",
+      "kind" : "variable",
+      "line" : 42,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 32
+     },
+     {
+      "name" : "members",
+      "kind" : "variable",
+      "line" : 43,
+      "char" : 11,
+      "deco" : "AS3ast6Symbol",
+      "offset" : 48
+     }
+    ]
+   },
+   {
+    "name" : "Ast",
+    "kind" : "struct",
+    "line" : 46,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "modules",
+      "kind" : "variable",
+      "line" : 47,
+      "char" : 11,
+      "deco" : "AS3ast6Module",
+      "offset" : 0
+     }
+    ]
+   },
+   {
+    "name" : "parse",
+    "kind" : "function",
+    "line" : 50,
+    "char" : 5,
+    "deco" : "FAyaZS3ast3Ast",
+    "parameters" : [
+     {
+      "name" : "filename",
+      "deco" : "Aya"
+     }
+    ],
+    "endline" : 55,
+    "endchar" : 1
+   },
+   {
+    "kind" : "template",
+    "line" : 57,
+    "char" : 3,
+    "name" : "parseJson",
+    "parameters" : [
+     {
+      "name" : "T",
+      "kind" : "type"
+     }
+    ],
+    "members" : [
+     {
+      "name" : "parseJson",
+      "kind" : "function",
+      "line" : 57,
+      "char" : 3,
+      "type" : "T(JSONValue jv)",
+      "parameters" : [
+       {
+        "name" : "jv",
+        "type" : "JSONValue"
+       }
+      ],
+      "endline" : 97,
+      "endchar" : 1
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "name" : "buildinterface",
+  "kind" : "module",
+  "file" : "source/buildinterface.d",
+  "members" : [
+   {
+    "name" : "std.file",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.stdio",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.process",
+    "kind" : "import",
+    "line" : 5,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.format",
+    "kind" : "import",
+    "line" : 6,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "std.string",
+    "kind" : "import",
+    "line" : 7,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "options",
+    "kind" : "import",
+    "line" : 9,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "getDflags",
+    "kind" : "function",
+    "line" : 11,
+    "char" : 8,
+    "deco" : "FZAya",
+    "endline" : 14,
+    "endchar" : 1
+   },
+   {
+    "name" : "jsonFile",
+    "kind" : "function",
+    "line" : 16,
+    "char" : 6,
+    "deco" : "FAyaZv",
+    "parameters" : [
+     {
+      "name" : "dfiles",
+      "deco" : "Aya"
+     }
+    ],
+    "endline" : 21,
+    "endchar" : 1
+   },
+   {
+    "name" : "buildInterface",
+    "kind" : "function",
+    "line" : 23,
+    "char" : 6,
+    "deco" : "FZv",
+    "endline" : 32,
+    "endchar" : 1
+   }
+  ]
+ },
+ {
+  "name" : "compare",
+  "kind" : "module",
+  "file" : "source/compare.d",
+  "members" : [
+   {
+    "name" : "ast",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "Result",
+    "kind" : "enum",
+    "line" : 5,
+    "char" : 1,
+    "baseDeco" : "i",
+    "members" : [
+     {
+      "name" : "equal",
+      "kind" : "enum member",
+      "value" : "0",
+      "line" : 6,
+      "char" : 2
+     },
+     {
+      "name" : "minor",
+      "kind" : "enum member",
+      "value" : "1",
+      "line" : 7,
+      "char" : 2
+     },
+     {
+      "name" : "major",
+      "kind" : "enum member",
+      "value" : "2",
+      "line" : 8,
+      "char" : 2
+     }
+    ]
+   },
+   {
+    "name" : "compareOldNew",
+    "kind" : "function",
+    "line" : 11,
+    "char" : 8,
+    "deco" : "FS3ast3AstQjZE7compare6Result",
+    "parameters" : [
+     {
+      "name" : "old",
+      "deco" : "S3ast3Ast"
+     },
+     {
+      "name" : "neu",
+      "deco" : "S3ast3Ast"
+     }
+    ],
+    "endline" : 13,
+    "endchar" : 1
+   }
+  ]
+ },
+ {
+  "name" : "options",
+  "kind" : "module",
+  "file" : "source/options.d",
+  "members" : [
+   {
+    "name" : "std.typecons",
+    "kind" : "import",
+    "line" : 3,
+    "char" : 8,
+    "protection" : "private",
+    "selective" : [
+     "Nullable",
+     "nullable",
+     "Tuple",
+     "tuple"
+    ]
+   },
+   {
+    "name" : "args",
+    "kind" : "import",
+    "line" : 4,
+    "char" : 8,
+    "protection" : "private"
+   },
+   {
+    "name" : "Options",
+    "kind" : "struct",
+    "line" : 6,
+    "char" : 1,
+    "members" : [
+     {
+      "name" : "projectPath",
+      "kind" : "variable",
+      "line" : 10,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 0
+     },
+     {
+      "name" : "old",
+      "kind" : "variable",
+      "line" : 13,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 16
+     },
+     {
+      "name" : "neu",
+      "kind" : "variable",
+      "line" : 16,
+      "char" : 9,
+      "deco" : "Aya",
+      "offset" : 32
+     }
+    ]
+   },
+   {
+    "name" : "getOptions",
+    "kind" : "function",
+    "line" : 19,
+    "char" : 20,
+    "deco" : "FNcZxS7options7Options",
+    "endline" : 21,
+    "endchar" : 1
+   },
+   {
+    "name" : "getWritableOptions",
+    "kind" : "function",
+    "line" : 23,
+    "char" : 13,
+    "deco" : "FNcZS7options7Options",
+    "endline" : 26,
+    "endchar" : 1
+   },
+   {
+    "name" : "getOptOptions",
+    "kind" : "function",
+    "line" : 28,
+    "char" : 6,
+    "deco" : "FKAAyaZv",
+    "parameters" : [
+     {
+      "name" : "args",
+      "deco" : "AAya",
+      "storageClass" : [
+       "ref"
+      ]
+     }
+    ],
+    "endline" : 35,
+    "endchar" : 1
+   }
+  ]
+ },
+ {
+  "name" : "vibe.appmain",
+  "kind" : "module",
+  "file" : "../../.dub/packages/vibe-core-1.10.2/vibe-core/source/vibe/appmain.d",
+  "members" : []
+ }
+]
