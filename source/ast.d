@@ -50,6 +50,10 @@ string moduleToName(ref const(Module) mod) pure @safe {
 		: mod.name.get();
 }
 
+string toString(ref const(Member) mem) {
+	return "";
+}
+
 struct Ast {
 	Module[] modules;
 }

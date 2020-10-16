@@ -52,12 +52,44 @@ Result compareOldNew(ref const(Ast) old, ref const(Ast) neu) {
 								, mem.name
 								, mod.moduleToName()));
 					}
-
+					const memsRslt = compareOldNew(mem, fm.get()
+							, [mod.moduleToName()]);
+					if(memsRslt.value == ResultValue.major) {
+						return memsRslt;
+					}
 				}
 			}
 		}
 	}
 
+	return Result(ResultValue.equal, "");
+}
+
+Result compareOldNew(ref const(Member) old, ref const(Member) neu
+		, string[] path)
+{
+	foreach(ref mem; old.members) {
+		Nullable!(const(Member)) f = neu.findMember(mem);
+		if(!f.isNull()) {
+			return Result(ResultValue.major, format(
+				"Member '%s' of '%(%s.%)' couldn't be found"
+					, mem.name, path));
+		}
+
+		string[] np = path ~ mem.name;
+		foreach(sub; mem.members) {
+			Nullable!(const(Member)) fm = findMember(f.get(), sub);
+			if(fm.isNull()) {
+				return Result(ResultValue.major, format(
+					"Member '%s' of '%s' couldn't be found"
+						, mem.name, np));
+			}
+			const memsRslt = compareOldNew(sub, fm.get(), np);
+			if(memsRslt.value == ResultValue.major) {
+				return memsRslt;
+			}
+		}
+	}
 	return Result(ResultValue.equal, "");
 }
 
@@ -83,8 +115,10 @@ bool areEqualImpl(T)(ref const(T) a, ref const(T) b) {
 		}
 	} else static if(is(T == struct)) {
 		static foreach(mem; FieldNameTuple!T) {
-			if(!areEqualImpl(__traits(getMember, a, mem)
-					, __traits(getMember, b, mem)))
+			if(mem != "members"
+					&& !areEqualImpl(__traits(getMember, a, mem)
+							, __traits(getMember, b, mem))
+						)
 			{
 				return false;
 			}
@@ -153,6 +187,22 @@ auto find2(alias pred, Rng)(Rng r) {
 	ret.r = r;
 	ret.popFrontImpl();
 	return ret;
+}
+
+Nullable!(const(Member)) findMember(ref const(Member) toFindIn
+	, ref const(Member) mem)
+{
+	import std.range : isForwardRange;
+
+	if(toFindIn.members.isNull()) {
+		return Nullable!(const(Member)).init;
+	}
+
+	auto n = toFindIn.members.get().find2!(a => a.name == mem.name)().array;
+	auto f = n.find2!(areEqualImpl)(mem);
+	return f.empty
+		? Nullable!(const(Member)).init
+		: nullable(f.front);
 }
 
 Nullable!(const(Member)) findMember(ref const(Module) toFindIn
