@@ -167,3 +167,16 @@ Nullable!(const(Member)) findMember(ref const(Module) toFindIn
 		? Nullable!(const(Member)).init
 		: nullable(f.front);
 }
+
+unittest {
+	enum o = "old.d.json";
+	import std.file : dirEntries, SpanMode;
+	import std.algorithm.searching : canFind;
+	foreach(fn; dirEntries("testdirgen/", "*.json", SpanMode.depth)) {
+		auto a = parse(fn.name);
+		auto b = fn.name.canFind(o)
+			? parse(fn.name[0 .. $ - o.length] ~ "new.d.json")
+			: parse(fn.name[0 .. $ - o.length] ~ "old.d.json");
+		auto c = compareOldNew(a, b);
+	}
+}
