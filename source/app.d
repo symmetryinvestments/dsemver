@@ -10,7 +10,7 @@ import options;
 
 void main(string[] args) {
 	getOptOptions(args);
-	writeln("Edit source/app.d to start your project.");
+
 	if(!getOptions().projectPath.empty) {
 		buildInterface();
 	}

@@ -44,6 +44,12 @@ struct Module {
 	Member[] members;
 }
 
+string moduleToName(ref const(Module) mod) pure @safe {
+	return mod.name.isNull
+		? mod.file
+		: mod.name.get();
+}
+
 struct Ast {
 	Module[] modules;
 }
