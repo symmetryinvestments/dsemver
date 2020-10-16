@@ -114,7 +114,7 @@ T parseJson(T)(JSONValue jv) {
 unittest {
 	import std.file;
 
-	foreach(f; dirEntries("testfiles/", "*.json", SpanMode.depth)) {
+	foreach(f; dirEntries("testdirgen/", "*.json", SpanMode.depth)) {
 		writeln(f.name);
 		try {
 			auto a = parse(f.name);
