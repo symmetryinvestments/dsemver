@@ -1,4 +1,4 @@
-module ast;
+module dsemver.ast;
 
 import std.stdio;
 import std.array : array, appender;

@@ -1,4 +1,4 @@
-module compare;
+module dsemver.compare;
 
 import std.array : array, empty, front;
 import std.algorithm.searching;
@@ -9,7 +9,7 @@ import std.stdio;
 
 import aggregateprinter;
 
-import ast;
+import dsemver.ast;
 
 enum ResultValue {
 	equal,

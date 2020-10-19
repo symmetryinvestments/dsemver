@@ -1,11 +1,11 @@
-module options;
+module dsemver.options;
 
 import std.typecons : Nullable, nullable, Tuple, tuple;
 import args;
 
 struct Options {
-	//@Arg('p', Optional.no, 
-	@Arg('p', 
+	//@Arg('p', Optional.no,
+	@Arg('p',
 			"The path to the project the SemVer should be calculated for")
 	string projectPath;
 

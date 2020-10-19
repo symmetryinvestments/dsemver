@@ -1,3 +1,5 @@
+module app;
+
 import std.stdio;
 import std.array : empty;
 

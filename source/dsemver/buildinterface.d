@@ -1,4 +1,4 @@
-module buildinterface;
+module dsemver.buildinterface;
 
 import std.file;
 import std.stdio;
@@ -6,7 +6,7 @@ import std.process;
 import std.format;
 import std.string;
 
-import options;
+import dsemver.options;
 
 string getDflags() {
 	auto r = executeShell("dub describe --data=dflags");
