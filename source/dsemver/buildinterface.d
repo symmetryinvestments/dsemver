@@ -8,6 +8,8 @@ import std.string;
 
 import dsemver.options;
 
+enum dsemverDir = ".dsemver";
+
 string getDflags() {
 	auto r = executeShell("dub describe --data=dflags");
 	return r.output.strip();
@@ -15,7 +17,8 @@ string getDflags() {
 
 void jsonFile(string dfiles) {
 	executeShell("dub clean");
-	const s = "DFLAGS=\"%s -X -Xf=dsemver.json\" dub build".format(dfiles);
+	const s = "DFLAGS=\"%s -X -Xf=%s/dsemver_latest.json\" dub build"
+		.format(dfiles, dsemverDir);
 	writeln(s);
 	executeShell(s);
 }
@@ -26,6 +29,10 @@ void buildInterface() {
 		chdir(oldCwd);
 	}
 	chdir(getOptions().projectPath);
+
+	if(!exists(dsemverDir)) {
+		mkdir(dsemverDir);
+	}
 
 	const dflags = getDflags();
 	jsonFile(dflags);
