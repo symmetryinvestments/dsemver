@@ -1,10 +1,12 @@
+// Result(major,major,major,major)
+
 union Union {
 	string a;
 	double b;
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 union Union {

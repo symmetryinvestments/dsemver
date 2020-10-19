@@ -185,7 +185,6 @@ unittest {
 	import std.file;
 
 	foreach(f; dirEntries("testdirgen/", "*.json", SpanMode.depth)) {
-		writeln(f.name);
 		try {
 			auto a = parse(f.name);
 		} catch(Exception e) {

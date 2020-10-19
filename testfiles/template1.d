@@ -1,3 +1,5 @@
+// Result(major,major,major,major)
+
 template Foo(T) {
 	int fun(T t) {
 		return cast(int)t;
@@ -5,7 +7,7 @@ template Foo(T) {
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 template Foo(T) {

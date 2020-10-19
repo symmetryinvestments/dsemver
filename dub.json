@@ -4,7 +4,6 @@
 	],
 	"copyright": "Copyright © 2020, Robert Schadek",
 	"dependencies": {
-		"aggregateprinter": "~>2.4.0",
 		"argsd": ">=1.0.0"
 	},
 	"description": "A program that computes the next semver for a dlang library or program",

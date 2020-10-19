@@ -1,3 +1,5 @@
+// Result(major, major, major, major)
+
 class Foo {
 	class Bar {
 		int a;
@@ -6,7 +8,7 @@ class Foo {
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 class Foo {

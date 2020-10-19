@@ -1,3 +1,5 @@
+// Result(equal,major,minor,major)
+
 struct Foo {
 	struct Bar {
 		int a;
@@ -6,7 +8,7 @@ struct Foo {
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 struct Foo {

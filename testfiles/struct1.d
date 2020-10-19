@@ -1,9 +1,11 @@
+// Result(major,major,major,major)
+
 struct Foo {
 	int bar;
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 struct Foo {

@@ -1,3 +1,5 @@
+// Result(major,equal,major,minor)
+
 int fun(int a) {
 	return a;
 }
@@ -11,7 +13,7 @@ int fun(string s) {
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 int fun(int a) {

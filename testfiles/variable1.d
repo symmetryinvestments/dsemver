@@ -1,7 +1,9 @@
+// Result(major,major,major,major)
+
 int a;
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 int b;

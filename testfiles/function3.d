@@ -1,9 +1,11 @@
+// Result(equal,equal,equal,equal)
+
 private int fun() {
 	return 0;
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 private int bar() {

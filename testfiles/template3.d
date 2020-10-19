@@ -1,9 +1,11 @@
+// Result(major,major,major,major)
+
 template Foo(T) {
 	T var;
 }
 
 //
-// SPLIT HERE
+// SPLIT_HERE
 //
 
 template Foo(T) {

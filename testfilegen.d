@@ -24,7 +24,7 @@ void main() {
 	foreach(de; dirEntries(testfiles, SpanMode.depth).array) {
 		string[] t = readText(de.name).splitter(
 `//
-// SPLIT HERE
+// SPLIT_HERE
 //`)
 			.array;
 		assert(t.length == 2, de.name);

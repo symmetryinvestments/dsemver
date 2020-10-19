@@ -4,10 +4,9 @@ import std.array : array, empty, front;
 import std.algorithm.searching;
 import std.algorithm.comparison : equal;
 import std.typecons : nullable, Nullable;
+import std.exception : enforce;
 import std.format;
 import std.stdio;
-
-import aggregateprinter;
 
 import dsemver.ast;
 
@@ -84,6 +83,12 @@ Result[] compareOldNew(ref const(Ast) old, ref const(Ast) neu) {
 				continue;
 			} else { // recurse into module
 				foreach(ref mem; mod.members) {
+					// we can ignore private members
+					if(!mem.protection.isNull()
+							&& mem.protection.get() == "private")
+					{
+						continue;
+					}
 					Nullable!(const(Member)) fm = findMember(fModNN, mem);
 					if(fm.isNull()) {
 						ret ~= Result(ResultValue.major, format(
@@ -126,6 +131,10 @@ Result[] compareOldNew(ref const(Member) old, ref const(Member) neu
 			continue;
 		}
 		foreach(ref const(Member) sub; mem.members) {
+			// we can ignore private members
+			if(!sub.protection.isNull() && sub.protection.get() == "private") {
+				continue;
+			}
 			Nullable!(const(Member)) fm = findMember(f.get(), sub);
 			if(fm.isNull()) {
 				ret ~= Result(ResultValue.major, format(
@@ -214,14 +223,65 @@ Nullable!(const(Member)) findMember(ref const(Module) toFindIn
 }
 
 unittest {
+	import std.file : dirEntries, SpanMode, readText;
+	import std.algorithm.searching : canFind, startsWith, find;
+	import std.algorithm.iteration : splitter, map;
+	import std.string : strip;
+
+	struct ExpectedResult {
+		ResultValue old;
+		ResultValue neu;
+		ResultValue oldC;
+		ResultValue neuC;
+	}
+
+	ExpectedResult getExpected(string fn) {
+		import std.conv : to;
+		enum sstr = "// Result";
+		string t = readText(fn);
+		auto s = t.splitter("\n").find!(l => l.startsWith(sstr));
+		assert(!s.empty, fn);
+
+		string[] ws = s.front[sstr.length .. $].strip("()")
+			.splitter(",")
+			.map!(r => r.strip())
+			.array;
+
+		enforce(ws.length == 4, fn);
+		return ExpectedResult
+			( ws[0].to!ResultValue()
+			, ws[1].to!ResultValue()
+			, ws[2].to!ResultValue()
+			, ws[3].to!ResultValue()
+			);
+	}
+
 	enum o = "old.d.json";
-	import std.file : dirEntries, SpanMode;
-	import std.algorithm.searching : canFind;
-	foreach(fn; dirEntries("testdirgen/", "*.json", SpanMode.depth)) {
+	foreach(fn; dirEntries("testdirgen/", "*old.d.json", SpanMode.depth)) {
 		auto a = parse(fn.name);
-		auto b = fn.name.canFind(o)
-			? parse(fn.name[0 .. $ - o.length] ~ "new.d.json")
-			: parse(fn.name[0 .. $ - o.length] ~ "old.d.json");
-		auto c = compareOldNew(a, b);
+		auto b = parse(fn.name[0 .. $ - o.length] ~ "new.d.json");
+
+		string expected = fn.name[0 .. $ - 5];
+		const ExpectedResult er = getExpected(expected);
+
+		auto cmpsON = compareOldNew(a, b);
+		auto sON = summarize(cmpsON);
+		assert(sON == er.old, format("\nwhich: old new\nfile: %s\ngot: %s\nexp: %s", fn.name
+				, sON, er.old));
+
+		auto cmpsNO = compareOldNew(b, a);
+		auto sNO = summarize(cmpsNO);
+		assert(sNO == er.neu, format("\nwhich: neu old\nfile: %s\ngot: %s\nexp: %s", fn.name
+				, sNO, er.neu));
+
+		auto compAB = combine(sON, sNO);
+		assert(compAB == er.oldC, format(
+				"\nwhich: old new comb\nfile: %s\ngot: %s\nexp: %s", fn.name
+				, compAB, er.oldC));
+
+		auto compBA = combine(sNO, sON);
+		assert(compBA == er.neuC, format(
+				"\nwhich: new old comb\nfile: %s\ngot: %s\nexp: %s", fn.name
+				, compBA, er.neuC));
 	}
 }

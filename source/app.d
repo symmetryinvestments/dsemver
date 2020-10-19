@@ -3,12 +3,10 @@ module app;
 import std.stdio;
 import std.array : empty;
 
-import aggregateprinter;
-
-import ast;
-import buildinterface;
-import compare;
-import options;
+import dsemver.ast;
+import dsemver.buildinterface;
+import dsemver.compare;
+import dsemver.options;
 
 void main(string[] args) {
 	getOptOptions(args);
