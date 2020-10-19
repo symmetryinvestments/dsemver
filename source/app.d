@@ -19,10 +19,14 @@ void main(string[] args) {
 		auto tp = parse(getOptions().testParse);
 	}
 
-	auto old = parse(getOptions().old);
-	auto neu = parse(getOptions().neu);
+	if(!getOptions().old.empty && !getOptions().neu.empty) {
+		auto old = parse(getOptions().old);
+		auto neu = parse(getOptions().neu);
+		auto onrs = compareOldNew(old, neu);
+		const onr = summarize(onrs);
 
-	auto r = compareOldNew(old, neu);
-	writeln(r);
-	writeln(summarize(r));
+		auto nors = compareOldNew(neu, old);
+		const nor = summarize(nors);
+		writefln("%s + %s = %s", onr, nor, combine(onr, nor));
+	}
 }

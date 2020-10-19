@@ -12,7 +12,6 @@ is a waste of time.
 This can be computed.
 This is what dsemver does.
 
-
 # dlang semver
 
 First release is 1.0.0.

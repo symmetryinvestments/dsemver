@@ -17,6 +17,28 @@ enum ResultValue {
 	major
 }
 
+ResultValue combine(const ResultValue on, const ResultValue no)
+		pure @safe
+{
+	final switch(on) {
+		case ResultValue.equal:
+			final switch(no) {
+				case ResultValue.equal: return ResultValue.equal;
+				case ResultValue.minor:
+						throw new Exception(format("%s %s", on, no));
+				case ResultValue.major: return ResultValue.minor;
+			}
+		case ResultValue.minor: assert(false);
+		case ResultValue.major:
+			final switch(no) {
+				case ResultValue.equal: return on;
+				case ResultValue.minor:
+						throw new Exception(format("%s %s", on, no));
+				case ResultValue.major: return on;
+			}
+	}
+}
+
 struct Result {
 	ResultValue value;
 	string reason;
