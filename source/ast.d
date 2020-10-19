@@ -1,7 +1,8 @@
 module ast;
 
 import std.stdio;
-import std.array : array;
+import std.array : array, appender;
+import std.algorithm.iteration : map;
 import std.json;
 import std.typecons : Nullable, nullable;
 import std.traits : isArray, isSomeString, isIntegral, isFloatingPoint,
@@ -50,8 +51,73 @@ string moduleToName(ref const(Module) mod) pure @safe {
 		: mod.name.get();
 }
 
+string toString(ref const(Parameter) p) {
+	auto app = appender!string();
+	formattedWrite(app, "\"%s", p.name);
+	if(!p.type.isNull()) {
+		formattedWrite(app, " type %s", p.type.get());
+	}
+	if(!p.deco.isNull()) {
+		formattedWrite(app, " deco %s", p.deco.get());
+	}
+	if(!p.kind.isNull()) {
+		formattedWrite(app, " kind %s", p.kind.get());
+	}
+	if(!p.storageClass.isNull()) {
+		formattedWrite(app, " storageClass %(%s, %)", p.storageClass.get());
+	}
+	app.put("\"");
+	return app.data;
+}
+
 string toString(ref const(Member) mem) {
-	return "";
+	import core.demangle;
+	auto app = appender!string();
+	formattedWrite(app, "\"%s", mem.kind);
+	formattedWrite(app, " '%s'", mem.name);
+	if(!mem.originalType.isNull) {
+		formattedWrite(app, " original_type '%s'", mem.originalType.get());
+	}
+	if(!mem.type.isNull) {
+		formattedWrite(app, " type '%s'", mem.type.get());
+	}
+	if(!mem.value.isNull) {
+		formattedWrite(app, " value '%s'", mem.value.get());
+	}
+	if(!mem.storageClass.isNull) {
+		formattedWrite(app, " storage class '%s'", mem.storageClass.get());
+	}
+	if(!mem.deco.isNull) {
+		formattedWrite(app, " of type '%s'", demangleType(mem.deco.get()));
+	}
+	if(!mem.baseDeco.isNull) {
+		formattedWrite(app, " '%s'", mem.baseDeco.get());
+	}
+	if(!mem.align_.isNull) {
+		formattedWrite(app, " align '%s'", mem.align_.get());
+	}
+	if(!mem.offset.isNull) {
+		formattedWrite(app, " offset '%s'", mem.offset.get());
+	}
+	if(!mem.parameters.isNull) {
+		formattedWrite(app, " parameters '%(%s, %)'"
+				, mem.parameters.get().map!(p => p.toString()));
+	}
+	if(!mem.overrides.isNull) {
+		formattedWrite(app, " overrides '%(%s, %)'", mem.overrides.get());
+	}
+	if(!mem.protection.isNull) {
+		formattedWrite(app, " protection '%s'", mem.protection.get());
+	}
+	if(!mem.selective.isNull) {
+		formattedWrite(app, " selective '%(%s, %)'", mem.selective.get());
+	}
+	if(!mem.members.isNull) {
+		formattedWrite(app, " members '%(%s, %)'"
+				, mem.members.get().map!(m => m.toString()));
+	}
+	app.put("\"");
+	return app.data;
 }
 
 struct Ast {

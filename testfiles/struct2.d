@@ -2,7 +2,7 @@ struct Foo {
 	struct Bar {
 		int a;
 	}
-	int a;
+	int c;
 }
 
 //
@@ -13,5 +13,5 @@ struct Foo {
 	struct Bar {
 		double a;
 	}
-	int a;
+	int c;
 }

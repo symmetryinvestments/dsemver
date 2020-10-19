@@ -24,4 +24,5 @@ void main(string[] args) {
 
 	auto r = compareOldNew(old, neu);
 	writeln(r);
+	writeln(summarize(r));
 }

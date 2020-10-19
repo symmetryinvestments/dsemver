@@ -5,6 +5,10 @@ import std.algorithm.searching;
 import std.algorithm.comparison : equal;
 import std.typecons : nullable, Nullable;
 import std.format;
+import std.stdio;
+
+import aggregateprinter;
+
 import ast;
 
 enum ResultValue {
@@ -16,6 +20,16 @@ enum ResultValue {
 struct Result {
 	ResultValue value;
 	string reason;
+}
+
+ResultValue summarize(const(Result)[] rslts) {
+	ResultValue rv;
+	foreach(ref r; rslts) {
+		if(r.value > rv) {
+			rv = r.value;
+		}
+	}
+	return rv;
 }
 
 Nullable!(const(Module)) findModule(ref const(Ast) toFindIn
@@ -31,77 +45,96 @@ Nullable!(const(Module)) findModule(ref const(Ast) toFindIn
 		: nullable(f.front);
 }
 
-Result compareOldNew(ref const(Ast) old, ref const(Ast) neu) {
+Result[] compareOldNew(ref const(Ast) old, ref const(Ast) neu) {
+	Result[] ret;
 	foreach(ref mod; old.modules) {
 		Nullable!(const(Module)) fMod = findModule(neu, mod);
 		if(fMod.isNull()) { // Not found
-			return Result(ResultValue.major, format(
+			ret ~= Result(ResultValue.major, format(
 				"module '%s' could no longer be found", mod.moduleToName()));
+			continue;
 		} else { // module name added
 			auto fModNN = fMod.get();
 			if(!fModNN.name.isNull() && mod.name.isNull()) {
-				return Result(ResultValue.major, format(
+				ret ~= Result(ResultValue.major, format(
 					"module '%s' added module name '%s'", mod.moduleToName()
 						, fModNN.name.get()));
+				continue;
 			} else { // recurse into module
 				foreach(ref mem; mod.members) {
 					Nullable!(const(Member)) fm = findMember(fModNN, mem);
 					if(fm.isNull()) {
-						return Result(ResultValue.major, format(
-							"Member '%s' of module '%s' couldn't be found"
+						ret ~= Result(ResultValue.major, format(
+							"Ast Member '%s' of module '%s' couldn't be found"
 								, mem.name
 								, mod.moduleToName()));
+						continue;
 					}
 					const memsRslt = compareOldNew(mem, fm.get()
 							, [mod.moduleToName()]);
-					if(memsRslt.value == ResultValue.major) {
-						return memsRslt;
-					}
+					ret ~= memsRslt;
 				}
 			}
 		}
 	}
 
-	return Result(ResultValue.equal, "");
+	return ret;
 }
 
-Result compareOldNew(ref const(Member) old, ref const(Member) neu
+Result[] compareOldNew(ref const(Member) old, ref const(Member) neu
 		, string[] path)
 {
+	Result[] ret;
+
+	if(old.members.isNull()) {
+		return ret;
+	}
+
 	foreach(ref mem; old.members) {
 		Nullable!(const(Member)) f = neu.findMember(mem);
-		if(!f.isNull()) {
-			return Result(ResultValue.major, format(
-				"Member '%s' of '%(%s.%)' couldn't be found"
-					, mem.name, path));
+		if(f.isNull()) {
+			ret ~= Result(ResultValue.major, format(
+				"%s of '%--(%s.%)' couldn't be found"
+					, mem.toString(), path));
+			continue;
 		}
 
 		string[] np = path ~ mem.name;
-		foreach(sub; mem.members) {
+		if(mem.members.isNull()) {
+			continue;
+		}
+		foreach(ref const(Member) sub; mem.members) {
 			Nullable!(const(Member)) fm = findMember(f.get(), sub);
 			if(fm.isNull()) {
-				return Result(ResultValue.major, format(
-					"Member '%s' of '%s' couldn't be found"
-						, mem.name, np));
+				ret ~= Result(ResultValue.major, format(
+					"%s of '%--(%s.%)' couldn't be found"
+						, sub.toString(), np));
+				continue;
 			}
 			const memsRslt = compareOldNew(sub, fm.get(), np);
-			if(memsRslt.value == ResultValue.major) {
-				return memsRslt;
-			}
+			ret ~= memsRslt;
 		}
 	}
-	return Result(ResultValue.equal, "");
+
+	return ret;
 }
 
 bool areEqualImpl(T)(ref const(T) a, ref const(T) b) {
-	import std.traits : isSomeString, isArray, FieldNameTuple;
+	import std.traits : isSomeString, isArray, FieldNameTuple, Unqual;
+	import std.range : ElementEncodingType;
+
 	static if(isSomeString!T) {
 		return a == b;
 	} else static if(isArray!T) {
 		if(a.length != b.length) {
 			return false;
 		} else {
-			return equal!((g,h) => areEqualImpl(g, h))(a, b);
+			alias ET = Unqual!(ElementEncodingType!T);
+			static if(is(ET == string)) {
+				return a.all!(i => canFind(b, i));
+			} else {
+				return equal!((g,h) => areEqualImpl(g, h))(a, b);
+			}
 		}
 	} else static if(is(T == long)) {
 		return a == b;
@@ -129,66 +162,6 @@ bool areEqualImpl(T)(ref const(T) a, ref const(T) b) {
 	}
 }
 
-auto find2(alias pred, Rng, E)(Rng r, E e) {
-	struct R {
-		Rng r;
-
-		@property auto front() {
-			return r.front;
-		}
-
-		@property bool empty() {
-			return r.empty;
-		}
-
-		private void popFrontImpl() {
-			while(!this.r.empty && !pred(this.r.front, e)) {
-				this.r = this.r[1 .. $];
-			}
-		}
-
-		void popFront() {
-			this.r = this.r[1 .. $];
-			this.popFrontImpl();
-		}
-	}
-
-	R ret;
-	ret.r = r;
-	ret.popFrontImpl();
-	return ret;
-}
-
-auto find2(alias pred, Rng)(Rng r) {
-	struct R {
-		Rng r;
-
-		@property auto front() {
-			return r.front;
-		}
-
-		@property bool empty() {
-			return r.empty;
-		}
-
-		private void popFrontImpl() {
-			while(!this.r.empty && !pred(this.r.front)) {
-				this.r = this.r[1 .. $];
-			}
-		}
-
-		void popFront() {
-			this.r = this.r[1 .. $];
-			this.popFrontImpl();
-		}
-	}
-
-	R ret;
-	ret.r = r;
-	ret.popFrontImpl();
-	return ret;
-}
-
 Nullable!(const(Member)) findMember(ref const(Member) toFindIn
 	, ref const(Member) mem)
 {
@@ -198,8 +171,8 @@ Nullable!(const(Member)) findMember(ref const(Member) toFindIn
 		return Nullable!(const(Member)).init;
 	}
 
-	auto n = toFindIn.members.get().find2!(a => a.name == mem.name)().array;
-	auto f = n.find2!(areEqualImpl)(mem);
+	auto n = toFindIn.members.get().find!(a => a.name == mem.name)().array;
+	auto f = n.find!(areEqualImpl)(mem);
 	return f.empty
 		? Nullable!(const(Member)).init
 		: nullable(f.front);
@@ -211,8 +184,8 @@ Nullable!(const(Member)) findMember(ref const(Module) toFindIn
 	import std.range : isForwardRange;
 
 	static assert(isForwardRange!(typeof(cast()toFindIn.members)));
-	auto n = toFindIn.members.find2!(a => a.name == mem.name)().array;
-	auto f = n.find2!(areEqualImpl)(mem);
+	auto n = toFindIn.members.find!(a => a.name == mem.name)().array;
+	auto f = n.find!(areEqualImpl)(mem);
 	return f.empty
 		? Nullable!(const(Member)).init
 		: nullable(f.front);
