@@ -16,13 +16,21 @@ This is what dsemver does.
 
 First release is 1.0.0.
 
-If a symbol is removed or changes signature the major version is increment and
-the minor and the bugfix number reset to 0.
+If a symbol is removed or its signature changed the major version is increment
+and the minor and the bugfix number reset to 0.
 
 If a new symbol gets added, the minor number is incremented and the bug fix
-number is reset to 0.
+number is set to 0.
 
-If no symbol gets changed, added or removed the bug fix number is incremented.
+If all symbol stay the same the bugfix number is incremented.
+
+If no symbol is changed, added or removed the bug fix number is incremented.
+
+# Usage
+
+```d
+./dsemver -p PATH_TO_DUB_FOLDER c
+```
 
 # FAQ
 

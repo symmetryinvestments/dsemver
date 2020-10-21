@@ -82,13 +82,20 @@ int main(string[] args) {
 		auto old = parse(latestTagFn);
 		auto neu = parse(latest);
 		auto onrs = compareOldNew(old, neu);
-		writefln("%--(%s\n%)", onrs.map!(i => i.reason));
+
+		if(getOptions().verbose) {
+			writefln("%--(%s\n%)", onrs.map!(i => i.reason));
+		}
+
 		const onr = summarize(onrs);
 
 		auto nors = compareOldNew(neu, old);
 		const nor = summarize(nors);
 		const com = combine(onr, nor);
-		writefln("%s + %s = %s", onr, nor, com);
+
+		if(getOptions().verbose) {
+			writefln("%s + %s = %s", onr, nor, com);
+		}
 
 		if(latestSemVer != SemVer.init) {
 			latestSemVer.preRelease = [];

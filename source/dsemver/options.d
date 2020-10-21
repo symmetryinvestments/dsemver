@@ -5,8 +5,7 @@ import args;
 
 struct Options {
 	//@Arg('p', Optional.no,
-	@Arg('p'
-		, "The path to the project the SemVer should be calculated for")
+	@Arg('p', "The path to the project the SemVer should be calculated for")
 	string projectPath;
 
 	@Arg('o')
@@ -18,13 +17,14 @@ struct Options {
 	@Arg('t')
 	string testParse;
 
-	@Arg('l'
-		, "Compute the interface of the latest git tag as reference")
+	@Arg('l', "Compute the interface of the latest git tag as reference")
 	bool buildLastestTag;
 
-	@Arg('k'
-		, "Compute the next version number")
+	@Arg('c', "Compute the next version number")
 	bool buildNextSemVer;
+
+	@Arg('v', "Enable verbose output")
+	bool verbose;
 }
 
 ref const(Options) getOptions() {
