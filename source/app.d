@@ -9,6 +9,7 @@ import dsemver.buildinterface;
 import dsemver.compare;
 import dsemver.git;
 import dsemver.options;
+import dsemver.semver;
 
 int main(string[] args) {
 	getOptOptions(args);
@@ -38,6 +39,7 @@ int main(string[] args) {
 	}
 
 	string latestTagFn = getOptions().neu;
+	SemVer latestSemVer;
 
 	if((getOptions().buildLastestTag || getOptions().buildNextSemVer)
 			&& latestTagFn.empty
@@ -63,6 +65,7 @@ int main(string[] args) {
 
 		checkoutRef(getOptions().projectPath, tags.front.gitRef);
 		latestTagFn = buildInterface(tags.front.semver.toString());
+		latestSemVer = tags.front.semver;
 	}
 
 	if(getOptions().buildNextSemVer) {
@@ -84,7 +87,23 @@ int main(string[] args) {
 
 		auto nors = compareOldNew(neu, old);
 		const nor = summarize(nors);
-		writefln("%s + %s = %s", onr, nor, combine(onr, nor));
+		const com = combine(onr, nor);
+		writefln("%s + %s = %s", onr, nor, com);
+
+		if(latestSemVer != SemVer.init) {
+			latestSemVer.preRelease = [];
+			latestSemVer.buildIdentifier = [];
+			if(latestSemVer.major == 0) {
+				latestSemVer = SemVer(1, 0, 0);
+			} else if(com == ResultValue.major) {
+				latestSemVer = SemVer(latestSemVer.major + 1, 0, 0);
+			} else if(com == ResultValue.minor) {
+				latestSemVer.minor++;
+			} else if(com == ResultValue.equal) {
+				latestSemVer.patch++;
+			}
+			writefln("\nNext release should have version '%s'\n", latestSemVer);
+		}
 	}
 	return 0;
 }
