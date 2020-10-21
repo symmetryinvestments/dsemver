@@ -14,7 +14,7 @@ import std.format : format;
 
 import dsemver.semver;
 
-private struct SheelRslt {
+struct SheelRslt {
 	const int rslt;
 	string output;
 }
@@ -44,7 +44,7 @@ bool isClean(string projectPath) {
 	return !m;
 }
 
-Nullable!SemVer toSemVer(string sv) {
+private Nullable!SemVer toSemVer(string sv) {
 	try {
 		SemVer ret = parseSemVer(sv);
 		return nullable(ret);

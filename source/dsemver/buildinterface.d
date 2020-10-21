@@ -8,14 +8,14 @@ import std.string;
 
 import dsemver.options;
 
-enum dsemverDir = ".dsemver";
+private enum dsemverDir = ".dsemver";
 
-string getDflags() {
+private string getDflags() {
 	auto r = executeShell("dub describe --data=dflags");
 	return r.output.strip();
 }
 
-string jsonFile(string dfiles, string ver) {
+private string jsonFile(string dfiles, string ver) {
 	executeShell("dub clean");
 	const fn = format("%s/dsemver_%s.json", dsemverDir, ver);
 	const s = "DFLAGS=\"%s -X -Xf=%s\" dub build"

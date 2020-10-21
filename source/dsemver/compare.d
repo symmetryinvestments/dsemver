@@ -150,7 +150,7 @@ Result[] compareOldNew(ref const(Member) old, ref const(Member) neu
 	return ret;
 }
 
-bool areEqualImpl(T)(ref const(T) a, ref const(T) b) {
+private bool areEqualImpl(T)(ref const(T) a, ref const(T) b) {
 	import std.traits : isSomeString, isArray, FieldNameTuple, Unqual;
 	import std.range : ElementEncodingType;
 
