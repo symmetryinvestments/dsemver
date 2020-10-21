@@ -6,6 +6,7 @@ import std.array : empty;
 import dsemver.ast;
 import dsemver.buildinterface;
 import dsemver.compare;
+import dsemver.git;
 import dsemver.options;
 
 void main(string[] args) {
@@ -28,5 +29,10 @@ void main(string[] args) {
 		auto nors = compareOldNew(neu, old);
 		const nor = summarize(nors);
 		writefln("%s + %s = %s", onr, nor, combine(onr, nor));
+	}
+
+	if(getOptions().lastestTag) {
+		const c = isClean(getOptions().projectPath);
+		writefln("%s", c);
 	}
 }

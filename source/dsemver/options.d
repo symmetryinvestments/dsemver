@@ -5,8 +5,8 @@ import args;
 
 struct Options {
 	//@Arg('p', Optional.no,
-	@Arg('p',
-			"The path to the project the SemVer should be calculated for")
+	@Arg('p'
+		, "The path to the project the SemVer should be calculated for")
 	string projectPath;
 
 	@Arg('o')
@@ -17,6 +17,10 @@ struct Options {
 
 	@Arg('t')
 	string testParse;
+
+	@Arg('l'
+		, "Compute the interface of the latest git tag as reference")
+	bool lastestTag;
 }
 
 ref const(Options) getOptions() {
