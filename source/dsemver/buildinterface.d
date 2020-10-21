@@ -15,15 +15,17 @@ string getDflags() {
 	return r.output.strip();
 }
 
-void jsonFile(string dfiles) {
+string jsonFile(string dfiles, string ver) {
 	executeShell("dub clean");
-	const s = "DFLAGS=\"%s -X -Xf=%s/dsemver_latest.json\" dub build"
-		.format(dfiles, dsemverDir);
+	const fn = format("%s/dsemver_%s.json", dsemverDir, ver);
+	const s = "DFLAGS=\"%s -X -Xf=%s\" dub build"
+		.format(dfiles, fn);
 	writeln(s);
 	executeShell(s);
+	return fn;
 }
 
-void buildInterface() {
+string buildInterface(string ver) {
 	string oldCwd = getcwd();
 	scope(exit) {
 		chdir(oldCwd);
@@ -35,5 +37,5 @@ void buildInterface() {
 	}
 
 	const dflags = getDflags();
-	jsonFile(dflags);
+	return getOptions().projectPath ~ "/" ~ jsonFile(dflags, ver);
 }

@@ -3,6 +3,7 @@ module dsemver.ast;
 import std.stdio;
 import std.array : array, appender;
 import std.algorithm.iteration : map;
+import std.algorithm.searching : endsWith, startsWith;
 import std.json;
 import std.typecons : Nullable, nullable;
 import std.traits : isArray, isSomeString, isIntegral, isFloatingPoint,
@@ -17,6 +18,8 @@ struct Parameter {
 	Nullable!(string) type;
 	Nullable!(string) deco;
 	Nullable!(string) kind;
+	Nullable!(string) defaultValue;
+	Nullable!(string) default_;
 	Nullable!(string[]) storageClass;
 }
 
@@ -25,6 +28,8 @@ struct Member {
 	string kind;
 	Nullable!(string) originalType;
 	Nullable!(string) type;
+	Nullable!(string) base;
+	Nullable!(string) init_;
 	Nullable!(string) value;
 	Nullable!(string[]) storageClass;
 	Nullable!(string) deco;
@@ -63,6 +68,12 @@ string toString(ref const(Parameter) p) {
 	if(!p.kind.isNull()) {
 		formattedWrite(app, " kind %s", p.kind.get());
 	}
+	if(!p.defaultValue.isNull()) {
+		formattedWrite(app, " defaultValue %s", p.defaultValue.get());
+	}
+	if(!p.default_.isNull()) {
+		formattedWrite(app, " default %s", p.default_.get());
+	}
 	if(!p.storageClass.isNull()) {
 		formattedWrite(app, " storageClass %(%s, %)", p.storageClass.get());
 	}
@@ -96,8 +107,14 @@ string toString(ref const(Member) mem) {
 	if(!mem.align_.isNull) {
 		formattedWrite(app, " align '%s'", mem.align_.get());
 	}
+	if(!mem.base.isNull) {
+		formattedWrite(app, " base '%s'", mem.base.get());
+	}
 	if(!mem.offset.isNull) {
 		formattedWrite(app, " offset '%s'", mem.offset.get());
+	}
+	if(!mem.init_.isNull) {
+		formattedWrite(app, " init '%s'", mem.init_.get());
 	}
 	if(!mem.parameters.isNull) {
 		formattedWrite(app, " parameters '%(%s, %)'"
@@ -141,8 +158,16 @@ T parseJson(T)(JSONValue jv) {
 					jv.type));
 		T arr;
 		alias ET = ElementEncodingType!T;
+		//pragma(msg, T.stringof ~ " " ~ ET.stringof);
 		foreach(it; jv.arrayNoRef()) {
-			arr ~= parseJson!ET(it);
+			auto tmp = parseJson!ET(it);
+			static if(is(ET == Member) || is(ET == Module)) {
+				if(!tmp.name.startsWith("__unittest_")) {
+					arr ~= tmp;
+				}
+			} else {
+				arr ~= tmp;
+			}
 		}
 		return arr;
 	} else static if(is(T : Nullable!G, G)) {
@@ -157,7 +182,9 @@ T parseJson(T)(JSONValue jv) {
 		T ret;
 
 		string[] jsNames = jv.objectNoRef().keys().sort.array;
-		string[] sNames = ([FieldNameTuple!T] ~ ["endchar", "endline", "char", "line"]).sort.array;
+		string[] sNames = ([FieldNameTuple!T] ~ ["endchar", "endline", "char", "line"])
+			.map!(it => it.endsWith("_") ? it[0 .. $ - 1] : it)
+			.array.sort.array;
 		auto sd = setDifference(jsNames, sNames);
 		if(!sd.empty) {
 			writefln("%s", sd);
@@ -165,8 +192,11 @@ T parseJson(T)(JSONValue jv) {
 
 		static foreach(mem; FieldNameTuple!T) {{
 			alias MT = typeof(__traits(getMember, T, mem));
+			//pragma(msg, T.stringof ~ " " ~ mem ~ " " ~ MT.stringof);
 
-			auto p = mem in jv;
+			enum memNoPostfix = mem.endsWith("_") ? mem[0 .. $ - 1] : mem;
+
+			auto p = memNoPostfix in jv;
 			static if(is(MT : Nullable!F, F)) {
 				if(p !is null) {
 					__traits(getMember, ret, mem) = parseJson!(F)(*p);

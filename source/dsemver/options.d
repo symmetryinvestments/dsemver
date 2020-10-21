@@ -20,7 +20,11 @@ struct Options {
 
 	@Arg('l'
 		, "Compute the interface of the latest git tag as reference")
-	bool lastestTag;
+	bool buildLastestTag;
+
+	@Arg('k'
+		, "Compute the next version number")
+	bool buildNextSemVer;
 }
 
 ref const(Options) getOptions() {

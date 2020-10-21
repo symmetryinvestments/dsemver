@@ -1,7 +1,8 @@
 module app;
 
 import std.stdio;
-import std.array : empty;
+import std.array : empty, front;
+import std.algorithm.iteration : map;
 
 import dsemver.ast;
 import dsemver.buildinterface;
@@ -9,11 +10,16 @@ import dsemver.compare;
 import dsemver.git;
 import dsemver.options;
 
-void main(string[] args) {
+int main(string[] args) {
 	getOptOptions(args);
 
-	if(!getOptions().projectPath.empty) {
-		buildInterface();
+	string latest = getOptions().old;
+	if(!getOptions().projectPath.empty
+			&& getOptions().buildNextSemVer
+			&& latest.empty
+		)
+	{
+		latest = buildInterface("latest");
 	}
 
 	if(!getOptions().testParse.empty) {
@@ -31,8 +37,54 @@ void main(string[] args) {
 		writefln("%s + %s = %s", onr, nor, combine(onr, nor));
 	}
 
-	if(getOptions().lastestTag) {
+	string latestTagFn = getOptions().neu;
+
+	if((getOptions().buildLastestTag || getOptions().buildNextSemVer)
+			&& latestTagFn.empty
+		)
+	{
 		const c = isClean(getOptions().projectPath);
-		writefln("%s", c);
+		if(!c) {
+			writefln("the git of the project '%s' has uncommited changes"
+					~ " this is not supported"
+					, getOptions().projectPath);
+			return 1;
+		}
+		auto tags = getTags(getOptions().projectPath);
+		if(tags.empty) {
+			writefln("No tags that match a semver found in '%s'"
+					, getOptions().projectPath);
+			return 1;
+		}
+
+		scope(exit) {
+			checkoutRef(getOptions().projectPath, "master");
+		}
+
+		checkoutRef(getOptions().projectPath, tags.front.gitRef);
+		latestTagFn = buildInterface(tags.front.semver.toString());
 	}
+
+	if(getOptions().buildNextSemVer) {
+		if(latest.empty) {
+			writefln("No latest dsemver file available");
+			return 1;
+		}
+
+		if(latestTagFn.empty) {
+			writefln("No latest git tag dsemver file available");
+			return 1;
+		}
+
+		auto old = parse(latestTagFn);
+		auto neu = parse(latest);
+		auto onrs = compareOldNew(old, neu);
+		writefln("%--(%s\n%)", onrs.map!(i => i.reason));
+		const onr = summarize(onrs);
+
+		auto nors = compareOldNew(neu, old);
+		const nor = summarize(nors);
+		writefln("%s + %s = %s", onr, nor, combine(onr, nor));
+	}
+	return 0;
 }
