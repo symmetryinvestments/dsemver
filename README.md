@@ -28,8 +28,9 @@ If no symbol is changed, added or removed the bug fix number is incremented.
 
 # Usage
 
-```d
-./dsemver -p PATH_TO_DUB_FOLDER c
+```sh
+# This will show the computed next version if there already exists a version tag
+./dsemver -p PATH_TO_DUB_FOLDER -c
 ```
 
 # FAQ
