@@ -66,7 +66,7 @@ struct SemVer {
 			ret ~= format("-%-(%s.%)", this.preRelease);
 		}
 		if(!this.buildIdentifier.empty) {
-			ret ~= format("+%-(%s.%)", this.preRelease);
+			ret ~= format("+%-(%s.%)", this.buildIdentifier);
 		}
 		return ret;
 	}
