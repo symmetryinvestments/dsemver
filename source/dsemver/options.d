@@ -38,8 +38,9 @@ ref Options getWritableOptions() {
 
 void getOptOptions(ref string[] args) {
 	import core.stdc.stdlib : exit;
+	const len = args.length;
 	bool helpWanted = parseArgsWithConfigFile(getWritableOptions(), args);
-	if(helpWanted || args.length == 1) {
+	if(helpWanted || len == 1) {
 		printArgsHelp(getOptions(),
 `
 
