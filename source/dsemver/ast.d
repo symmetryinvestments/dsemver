@@ -14,7 +14,7 @@ import std.format;
 import std.exception : enforce;
 
 struct Parameter {
-	string name;
+	Nullable!(string) name;
 	Nullable!(string) type;
 	Nullable!(string) deco;
 	Nullable!(string) kind;
