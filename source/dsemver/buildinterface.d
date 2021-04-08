@@ -21,7 +21,10 @@ private string jsonFile(string dfiles, string ver) {
 	const s = "DFLAGS=\"%s -X -Xf=%s\" dub build"
 		.format(dfiles, fn);
 	writeln(s);
-	executeShell(s);
+	auto rc = executeShell(s);
+	if (rc.status) {
+		throw new Exception("The project doesn't compile:\n" ~ rc.output);
+	}
 	return fn;
 }
 
