@@ -22,8 +22,9 @@ private string jsonFile(string dfiles, string ver) {
 		.format(dfiles, fn);
 	writeln(s);
 	auto rc = executeShell(s);
-	if (rc.status)
+	if (rc.status) {
 		throw new Exception("The project doesn't compile:\n" ~ rc.output);
+	}
 	return fn;
 }
 
