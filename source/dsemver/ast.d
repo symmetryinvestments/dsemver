@@ -148,14 +148,6 @@ Ast parse(string filename) {
 	return Ast(parseJson!(Module[])(jv));
 }
 
-private bool nameIsOkayToUse(T)(T obj) {
-	static if(is(typeof(obj.name) : Nullable!F, F)) {
-		return !obj.name.isNull();
-	} else {
-		return true;
-	}
-}
-
 T parseJson(T)(JSONValue jv) {
 	static if(isBasicType!T) {
 		return jv.get!T();
@@ -170,17 +162,19 @@ T parseJson(T)(JSONValue jv) {
 		foreach(it; jv.arrayNoRef()) {
 			auto tmp = parseJson!ET(it);
 			static if(is(ET == Member) || is(ET == Module)) {
-				if(!tmp.nameIsOkayToUse()) {
+				static if(is(typeof(tmp.name) : Nullable!F, F)) {
+					if(tmp.name.isNull) {
+						continue;
+					}
+					auto name = tmp.name.get;
+				} else {
+					auto name = tmp.name;
+				}
+				if(name.startsWith("__unittest_")) {
 					continue;
 				}
-				if(!tmp.name.startsWith("__unittest_")) {
-					arr ~= tmp;
-				} else if(!tmp.name.startsWith("__unittest_")) {
-					arr ~= tmp;
-				}
-			} else {
-				arr ~= tmp;
 			}
+			arr ~= tmp;
 		}
 		return arr;
 	} else static if(is(T : Nullable!G, G)) {
