@@ -117,7 +117,8 @@ Result[] compareOldNew(ref const(Member) old, ref const(Member) neu
 		return ret;
 	}
 
-	foreach(ref mem; old.members) {
+	Member[] emptyArray;
+	foreach(ref mem; old.members.get(emptyArray)) {
 		Nullable!(const(Member)) f = neu.findMember(mem);
 		if(f.isNull()) {
 			ret ~= Result(ResultValue.major, format(
@@ -130,7 +131,7 @@ Result[] compareOldNew(ref const(Member) old, ref const(Member) neu
 		if(mem.members.isNull()) {
 			continue;
 		}
-		foreach(ref const(Member) sub; mem.members) {
+		foreach(ref const(Member) sub; mem.members.get(emptyArray)) {
 			// we can ignore private members
 			if(!sub.protection.isNull() && sub.protection.get() == "private") {
 				continue;
