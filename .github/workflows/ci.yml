@@ -17,13 +17,13 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - windows-latest
+          #- windows-latest
           - ubuntu-latest
-          - macOS-latest
+          #- macOS-latest
         compiler:
           - 'dmd-latest'
-          - 'ldc-latest'
           - 'dmd-beta'
+          #- 'ldc-latest'
           # - 'ldc-beta' # the tests crash
     steps:
     - uses: actions/checkout@v2
