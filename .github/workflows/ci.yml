@@ -37,6 +37,7 @@ jobs:
 
     - name: Test
       run: |
+		dmd -run testfilegen.d
         dub test
 
   Skip:
