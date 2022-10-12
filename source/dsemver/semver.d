@@ -12,7 +12,7 @@ import std.exception : enforce, basicExceptionCtors, assertThrown,
 import std.utf : byChar, byUTF;
 import std.range : popFront;
 
-@safe:
+@safe pure:
 
 struct SemVer {
 @safe:
