@@ -27,15 +27,15 @@ struct SemVer {
 	static immutable(SemVer) MinRelease = SemVer(0, 0, 0);
 	static immutable(SemVer) MaxRelease = SemVer(uint.max, uint.max, uint.max);
 
-	bool opEquals(const(SemVer) other) const nothrow pure {
+	bool opEquals(const(SemVer) other) scope const nothrow pure @nogc {
 		return compare(this, other) == 0;
 	}
 
-	int opCmp(const(SemVer) other) const nothrow pure {
+	int opCmp(const(SemVer) other) scope const nothrow pure @nogc {
 		return compare(this, other);
 	}
 
-	size_t toHash() const nothrow @nogc pure {
+	size_t toHash() scope const nothrow @nogc pure {
 		size_t hash = this.major.hashOf();
 		hash = this.minor.hashOf(hash);
 		hash = this.patch.hashOf(hash);
@@ -72,7 +72,7 @@ struct SemVer {
 	}
 }
 
-int compare(const(SemVer) a, const(SemVer) b) nothrow pure {
+int compare(const(SemVer) a, const(SemVer) b) nothrow pure @nogc {
 	if(a.major != b.major) {
 		return a.major < b.major ? -1 : 1;
 	}
@@ -93,16 +93,10 @@ int compare(const(SemVer) a, const(SemVer) b) nothrow pure {
 	while(idx < a.preRelease.length && idx < b.preRelease.length) {
 		string aStr = a.preRelease[idx];
 		string bStr = b.preRelease[idx];
-		Nullable!uint aNumN = isAllNum(aStr);
-		Nullable!uint bNumN = isAllNum(bStr);
-		if(!aNumN.isNull() && !bNumN.isNull()) {
-			uint aNum = aNumN.get();
-			uint bNum = bNumN.get();
-
-			if(aNum != bNum) {
-				return aNum < bNum ? -1 : 1;
-			}
-		} else if(aStr != bStr) {
+		if(aStr.length != bStr.length && aStr.isAllNumImpl && bStr.isAllNumImpl) {
+			return aStr.length < bStr.length ? -1 : 1;
+		}
+		if(aStr != bStr) {
 			return aStr < bStr ? -1 : 1;
 		}
 		++idx;
@@ -115,14 +109,15 @@ int compare(const(SemVer) a, const(SemVer) b) nothrow pure {
 	return idx < a.preRelease.length ? 1 : -1;
 }
 
-Nullable!uint isAllNum(string s) nothrow pure {
+private bool isAllNumImpl(string s) nothrow pure @nogc {
 	import std.utf : byUTF;
 	import std.ascii : isDigit;
 	import std.algorithm.searching : all;
-	import std.conv : to, ConvException;
+	return s.byUTF!char().all!isDigit();
+}
 
-	const bool allNum = s.byUTF!char().all!isDigit();
-
+Nullable!uint isAllNum(string s) nothrow pure {
+	const bool allNum = s.isAllNumImpl;
 	if(allNum) {
 		try {
 			return nullable(to!uint(s));
